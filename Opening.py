@@ -4,14 +4,30 @@ np.set_printoptions(threshold=np.inf)
 np.set_printoptions(suppress=True)
 import csv
 
-if __name__ == '__main__':
-    data = open('data.csv', 'r')
-    data = csv.reader(data)
-    i = 0;
-    for ro in data:
-        i += 1
-    print(i)
 
+def get_arrays(path):
+    data = open(path, 'r')
+    data = csv.reader(data)
+    result = []
+    for ro in data:
+        result.append((int(ro[0]), np.array(ro[1:], dtype=float)))
+    return result
+
+def show_picture(in_array):
+    A = in_array.reshape((28, 28))
+    A = np.matrix(A)
+    plt.style.use('classic')
+    plt.imshow(A, cmap='gray')
+    title = "Original Image"
+    plt.title(title)
+    plt.draw()
+    plt.show()
+
+if __name__ == '__main__':
+
+    data = get_arrays('data.csv')
+    for i in data:
+        show_picture(i[1])
     # for row in data:
     #     A = np.array(row[1:], dtype='float')
     #     A = A.reshape((28, 28))
@@ -27,6 +43,5 @@ if __name__ == '__main__':
     #     plt.draw()
     #     plt.savefig(name)
     #     plt.show()
-
 
 
