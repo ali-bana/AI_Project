@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 np.set_printoptions(threshold=np.inf)
 np.set_printoptions(suppress=True)
 import csv
+from Utils import *
 
 
 def get_arrays(path):
@@ -11,6 +12,10 @@ def get_arrays(path):
     result = []
     for ro in data:
         result.append((int(ro[0]), np.array(ro[1:], dtype=float)))
+    # for i in range(len(result)):
+    #     result[i] = (result[i][0], np.append(result[i][1], has_closed(result[i][1])))
+    #     print(i)
+    print('compeleted saving the shit')
     return result
 
 def show_picture(in_array):
@@ -21,6 +26,17 @@ def show_picture(in_array):
     title = "Original Image"
     plt.title(title)
     plt.draw()
+    plt.show()
+
+def save_pic(arr, name):
+    arr = arr.reshape((28, 28))
+    arr = np.matrix(arr)
+    plt.style.use('classic')
+    plt.imshow(arr, cmap='gray')
+    title = "Original Image"
+    plt.title(title)
+    plt.draw()
+    plt.savefig(name)
     plt.show()
 
 if __name__ == '__main__':

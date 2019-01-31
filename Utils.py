@@ -3,23 +3,7 @@ from copy import deepcopy
 from Opening import *
 
 def find_groups(inpixels):
-    """
-    Group the pixels in the image into three categories: free, closed, and
-    border.
-        free: A white pixel with a path to outside the image.
-        closed: A white pixels with no path to outside the image.
-        border: A black pixel.
 
-    Params:
-        pixels: A collection of columns of rows of pixels. 0 is black 1 is
-                white.
-
-    Return:
-        PixelGroups with attributes free, closed and border.
-        Each is a list of tuples (y, x).
-    """
-
-    # Pad the entire image with white pixels.
     width = len(inpixels[0]) + 2
     height = len(inpixels) + 2
     pixels = deepcopy(inpixels)
@@ -29,7 +13,6 @@ def find_groups(inpixels):
     pixels.insert(0, [1 for x in range(width)])
     pixels.append([1 for x in range(width)])
 
-    # The free pixels are found through a breadth first traversal.
     queue = [(0,0)]
     visited = [(0,0)]
     while queue:
@@ -43,7 +26,6 @@ def find_groups(inpixels):
                 queue.append(n)
                 visited.append(n)
 
-    # Remove the padding and make the categories.
     freecoords = [(y-1, x-1) for (y, x) in visited if
                  (0 < y < height-1 and 0 < x < width-1)]
     allcoords = [(y, x) for y in range(height-2) for x in range(width-2)]
@@ -52,7 +34,7 @@ def find_groups(inpixels):
     closedcoords = [(y, x) for (y, x) in complement if inpixels[y][x] == 1]
 
     PixelGroups = namedtuple('PixelGroups', ['free', 'closed', 'border'])
-    return PixelGroups(freecoords, closedcoords, bordercoords)
+    return PixelGroups(freecoords, closedcoords, bordercoords), closedcoords
 
 def print_groups(ysize, xsize, pixelgroups):
     ys= []
@@ -69,12 +51,22 @@ def print_groups(ysize, xsize, pixelgroups):
     print('\n'.join([' '.join(k) for k in ys]))
 
 
+def has_closed(vector):
+    pixels = vector
+    pixels = np.where(pixels > 0.5, 0, 1)
+    pixels = pixels.reshape((28, 28))
+    pixels = pixels.tolist()
+    pixelgroups, closed = find_groups(pixels)
+    return len(closed)
+
 if __name__ == "__main__":
    pixels = get_arrays('test.csv')
-   pixels = pixels[84][1]
+   pixels = pixels[7][1]
+   print(has_closed(pixels))
    pixels = np.where(pixels > 0.5, 0, 1)
    pixels = pixels.reshape((28, 28))
    pixels = pixels.tolist()
    pixelgroups = find_groups(pixels)
+   pixelgroups = pixelgroups[0]
    print_groups(28, 28, pixelgroups)
    print("closed: " + str(pixelgroups.closed))
