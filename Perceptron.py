@@ -1,7 +1,7 @@
-import Opening
 import numpy as np
 import math
 from Opening import get_arrays
+from Opening import show_picture
 
 def perceptron(data, number):
     weights = []
@@ -34,7 +34,7 @@ def cal_tetha(f, correct, wrong):
     return theta /( 2 * np.dot(f, f))
 
 def normalize(arr):
-    return (1000 / math.sqrt(np.dot(arr, arr))) * arr
+    return (1 / math.sqrt(np.dot(arr, arr))) * arr
 
 
 def decide(data, weights):
@@ -59,6 +59,8 @@ if __name__ == "__main__":
             all += 1
             answer = decide(d[1], weights)
             if answer != d[0]:
+                #show_picture(d[1])
                 wrong += 1
         print('all ' + str(all))
         print('wrong ' + str(wrong))
+        print((all-wrong) / all)
