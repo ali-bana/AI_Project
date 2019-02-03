@@ -6,17 +6,38 @@ import csv
 from Utils import *
 
 
+def get_from_txt(path):
+    file = open(path, 'r')
+    f1 = file.readlines()
+    result = []
+    for i in f1:
+        #print(i)
+        akbar = i.split(" ")
+        akbar = [float(akbar[0]), float(akbar[1])]
+        akbar = np.array(akbar, dtype=float)
+        # print(akbar)
+        #b = list(i)
+        #print(b)
+        result.append(akbar)
+    return result
+
+
 def get_arrays(path):
+    fpath = 'data_f.txt'
     data = open(path, 'r')
     data = csv.reader(data)
+    feature = get_from_txt(fpath)
     result = []
     for ro in data:
         result.append((int(ro[0]), np.array(ro[1:], dtype=float)))
     # for i in range(len(result)):
     #     result[i] = (result[i][0], np.append(result[i][1], has_closed(result[i][1])))
     #     print(i)
-    print('compeleted saving the shit')
+    #print('compeleted saving the shit')
+    for i in range(len(result)):
+        result[i] = (result[i][0], np.append(result[i][1], feature[i]))
     return result
+
 
 def show_picture(in_array):
     A = in_array.reshape((28, 28))
